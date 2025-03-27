@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class AccountController extends Controller
 {
@@ -68,14 +71,24 @@ class AccountController extends Controller
          $user->name=$request->name;
          $user->email=$request->email;
          $user->save();
+
          if (!empty($request->image)) {
+            //Delete Old Image when new updated
+            File::delete(public_path('uploads/profile/'.$user->image));
+            File::delete(public_path('uploads/profile/thumb/'.$user->image));
          $image=$request->image;
          $ext=$image->getClientOriginalExtension();
          $imageName=time().'.'.$ext;
          $image->move(public_path('uploads/profile'),$imageName);
          $user->image=$imageName;
          $user->save();
+         $manager=new ImageManager(Driver::class);
+         $img = $manager->read(public_path('uploads/profile/'.$imageName));
+         $img->cover(150,150);
+         $img->save(public_path('uploads/profile/thumb/'.$imageName));
+
         }
+
          return redirect()->route('account.profile')->with('success','Profile updated Successfully!');
     }
     public function logout(){

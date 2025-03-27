@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\AccountController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,6 +19,9 @@ Route::group(['prefix'=>'account'],function(){
     Route::get('profile',[AccountController::class,'profile'])->name('account.profile');
     Route::get('logout',[AccountController::class,'logout'])->name('account.logout');
     Route::post('update-profile',[AccountController::class,'updateProfile'])->name('account.updateProfile');
+    Route::get('books',[BookController::class,'index'])->name('books.index');
+    Route::get('books/create',[BookController::class,'create'])->name('books.create');
+    Route::post('books-create',[BookController::class,'store'])->name('books.store');
 
      });
 });
