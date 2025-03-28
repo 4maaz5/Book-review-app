@@ -36,21 +36,21 @@
 
                                 <div class="card border-0 shadow">
                                     <div class="card-header  text-white">
-                                        Add Book
+                                        Edit Book
                                     </div>
                                     <div class="card-body">
-                                        <form action="{{ route('books.store') }}" method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('books.update',$book->id) }}" method="post" enctype="multipart/form-data">
                                             @csrf
                                         <div class="mb-3">
                                             <label for="title" class="form-label @error('title') is-invalid @enderror">Title</label>
-                                            <input type="text" class="form-control" placeholder="Title" name="title" id="title" value="{{ old('title') }}"/>
+                                            <input type="text" class="form-control" placeholder="Title" name="title" id="title" value="{{ old('title',$book->title) }}"/>
                                             @error('title')
                                                 <p class="invalid-feedback">{{ $message }}</p>
                                             @enderror
                                         </div>
                                         <div class="mb-3">
                                             <label for="author" class="form-label">Author</label>
-                                            <input type="text" class="form-control @error('author') is-invalid @enderror" placeholder="Author" value="{{ old('author') }}" name="author" id="author"/>
+                                            <input type="text" class="form-control @error('author') is-invalid @enderror" placeholder="Author" value="{{ old('author',$book->author) }}" name="author" id="author"/>
                                             @error('author')
                                             <p class="invalid-feedback">{{ $message }}</p>
                                         @enderror
@@ -58,7 +58,7 @@
 
                                         <div class="mb-3">
                                             <label for="author" class="form-label">Description</label>
-                                            <textarea name="description" id="description" class="form-control" placeholder="Description" cols="30" rows="5">{{ old('description') }}</textarea>
+                                            <textarea name="description" id="description" class="form-control" placeholder="Description" cols="30" rows="5">{{ old('description',$book->description) }}</textarea>
                                         </div>
 
                                         <div class="mb-3">
@@ -69,18 +69,21 @@
                                             @error('image')
                                                 <p class="invalid-feedback">{{ $message }}</p>
                                             @enderror
+                                            @if(!empty($book->image))
+                                                <img src="{{ asset('uploads/books/thumb/'.$book->image) }}" class="w-25 my-3">
+                                            @endif
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="author" class="form-label">Status</label>
                                             <select name="status" id="status" class="form-control">
-                                                <option value="1">Active</option>
-                                                <option value="0">Block</option>
+                                                <option value="1" {{ ($book->status==1)? 'selected':'' }}>Active</option>
+                                                <option value="0" {{ ($book->status==0)?'selected':'' }}>Block</option>
                                             </select>
                                         </div>
 
 
-                                        <button class="btn btn-primary mt-2">Create</button>
+                                        <button class="btn btn-primary mt-2">Update</button>
                                         </form>
                                     </div>
                                 </div>
