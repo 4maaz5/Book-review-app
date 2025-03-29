@@ -6,6 +6,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeController;
 
 Route::get('/',[HomeController::class,'index'])->name('home');
+Route::get('/book-detail/{id}',[HomeController::class,'detail'])->name('book.detail');
 
 Route::group(['prefix'=>'account'],function(){
     Route::group(['middleware'=>'guest'],function(){
