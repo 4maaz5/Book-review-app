@@ -18,6 +18,7 @@
                         @endif
                     </div>
                     <div class="col-md-8">
+                        @include('layouts.message')
                         <h3 class="h2 mb-3">{{ $book->title }}</h3>
                         <div class="h4 text-muted">{{ $book->author }}</div>
                         <div class="star-rating d-inline-flex ml-2" title="">
@@ -61,15 +62,16 @@
                                     <div class="card border-0 shadow-lg">
                                         {{-- <img src="images/book02.jpg" alt="" class="card-img-top">
                                          --}}
+                                         <a href="{{ route('book.detail',$relatedBook->id) }}">
                                          @if($relatedBook->image != '')
                                          <img src="{{ asset('uploads/books/thumb/'.$relatedBook->image) }}" alt="" class="card-img-top">
                                          @else
                                          <img src="https://placehold.co/990x1400?text=No Image" alt="" class="card-img-top">
 
                                          @endif
-
+                                         </a>
                                         <div class="card-body">
-                                            <h3 class="h4 heading">{{ $relatedBook->title }}</h3>
+                                            <h3 class="h4 heading">   <a href="{{ route('book.detail',$relatedBook->id) }}">{{ $relatedBook->title }}</a></h3>
                                             <p>by {{ $relatedBook->author }}</p>
                                             <div class="star-rating d-inline-flex ml-2" title="">
                                                 <span class="rating-text theme-font theme-yellow">0.0</span>
@@ -242,11 +244,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="" id="BookReviewForm" name="BookReviewForm">
+                    <input type="hidden" name="book_id" value="{{ $book->id }}">
                 <div class="modal-body">
 
                         <div class="mb-3">
                             <label for="" class="form-label">Review</label>
                             <textarea name="review" id="review" class="form-control" cols="5" rows="5" placeholder="Review"></textarea>
+                            <p class="invalid-feedback" id="review-error"></p>
                         </div>
                         <div class="mb-3">
                             <label for=""  class="form-label">Rating</label>
@@ -272,6 +276,30 @@
 @endsection
 @section('script')
 <script>
-
+$('#BookReviewForm').submit(function(e){
+   e.preventDefault();
+   $.ajax({
+    url : '{{ route("book.saveReview") }}',
+    type : 'POST',
+    headers:{
+        'X-CSRF-TOKEN':'{{ csrf_token() }}'
+    },
+    data:$("#BookReviewForm").serializeArray(),
+    success:function(response){
+        if(response.status==false){
+            var errors=response.errors;
+            if(errors.review){
+                $("#review").addClass('is-invalid');
+                $("#review-error").html(errors.review);
+            }else{
+                $("#review").removeClass('is-invalid');
+                $("#review-error").html('');
+            }
+        }else{
+            window.location.href='{{ route("book.detail",$book->id) }}';
+        }
+    }
+   });
+});
     </script>
     @endsection
