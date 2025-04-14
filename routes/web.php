@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/',[HomeController::class,'index'])->name('home');
 Route::get('/book-detail/{id}',[HomeController::class,'detail'])->name('book.detail');
@@ -26,6 +27,14 @@ Route::group(['prefix'=>'account'],function(){
     Route::post('books-create',[BookController::class,'store'])->name('books.store');
     Route::get('books/edit/{id}',[BookController::class,'edit'])->name('books.edit');
     Route::post('books-update/{id}',[BookController::class,'update'])->name('books.update');
+    Route::get('reviews',[ReviewController::class,'index'])->name('account.reviews');
+    Route::get('reviews/{id}',[ReviewController::class,'edit'])->name('account.reviews.edit');
+    Route::post('reviews/update/{id}',[ReviewController::class,'updateReview'])->name('account.reviews.update');
+    Route::post('delete/review/',[ReviewController::class,'deleteReview'])->name('account.reviews.delete');
+    Route::get('my-reviews/',[AccountController::class,'myReviews'])->name('account.myReviews');
+    Route::get('my-reviews/{id}',[AccountController::class,'editReviews'])->name('account.myReviews.edit');
+    Route::post('my-reviews-update/{id}',[AccountController::class,'updateReviews'])->name('account.myReviews.update');
+
 
      });
 });

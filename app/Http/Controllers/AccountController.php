@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -94,5 +95,39 @@ class AccountController extends Controller
     public function logout(){
         Auth::logout();
         return redirect()->route('account.login');
+    }
+    public function myReviews(Request $request){
+        $reviews=Review::with('Book')->where('user_id',Auth::user()->id);
+        $reviews=$reviews->orderBy('created_at','DESC');
+        if (!empty($request->keyword)) {
+            $reviews=$reviews->where('review','like','%'.$request->keyword.'%');
+        }
+        $reviews=$reviews->paginate(10);
+       return view('account.my-reviews.myReviews',['reviews'=>$reviews]);
+    }
+    public function editReviews($id){
+       $review=Review::where([
+          'id'=>$id,
+          'user_id'=>Auth::user()->id
+       ])->with('Book')->first();
+       return view('account.my-reviews.my-Reviews-edit',['review'=>$review]);
+    }
+
+      //This method will update the my-review
+      public function updateReviews($id,Request $request){
+        $review=Review::findOrFail($id);
+      $validator=Validator::make($request->all(),[
+         'review'=>'required',
+         'rating'=>'required'
+      ]);
+      if ($validator->fails()) {
+        return redirect()->route('account.myReviews.edit',$id)->withInput()->withErrors($validator);
+      }
+
+      $review->review=$request->review;
+      $review->rating=$request->rating;
+      $review->save();
+      session()->flash('success','Review updated Successfully.');
+      return redirect()->route('account.myReviews');
     }
 }
