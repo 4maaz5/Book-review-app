@@ -119,7 +119,20 @@ class BookController extends Controller
     }
 
     //This method will delete the book
-    public function destroy(){
-
+    public function destroy(Request $request){
+        $id=$request->id;
+        $review=Book::find($id);
+        if($review==null){
+          session()->flash('error','Book not found!');
+          return response()->json([
+            'status'=>false
+          ]);
+        }else{
+          $review->delete();
+          session()->flash('success','Book deleted successfully!');
+          return response()->json([
+             'status'=>true
+          ]);
+        }
     }
 }

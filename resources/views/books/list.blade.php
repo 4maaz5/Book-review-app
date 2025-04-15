@@ -52,7 +52,7 @@
                                                                 <a href="#" class="btn btn-success btn-sm"><i class="fa-regular fa-star"></i></a>
                                                                 <a href="{{ route('books.edit',$book->id) }}" class="btn btn-primary btn-sm"><i class="fa-regular fa-pen-to-square"></i>
                                                                 </a>
-                                                                <a href="" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+                                                                <a href="#" onclick="destroy({{ $book->id }})" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
                                                             </td>
                                                         </tr>
                                                         @endforeach
@@ -76,4 +76,24 @@
         </div>
     </div>
 
+@endsection
+
+@section('script')
+<script>
+    function destroy(id){
+       if(confirm("Are you sure you want to delete?")){
+        $.ajax({
+           url:'{{ route("books.delete") }}',
+           data:{id:id},
+           type:'Post',
+           headers:{
+              'X-CSRF-TOKEN':'{{ csrf_token() }}'
+           },
+           success:function(response){
+             window.location.href='{{ route("books.index") }}';
+           }
+        });
+       }
+    }
+    </script>
 @endsection
