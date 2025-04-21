@@ -128,6 +128,9 @@ class BookController extends Controller
             'status'=>false
           ]);
         }else{
+            File::delete(public_path('uploads/books/'.$review->image));
+            File::delete(public_path('uploads/books/thumb/'.$review->image));
+
           $review->delete();
           session()->flash('success','Book deleted successfully!');
           return response()->json([

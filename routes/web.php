@@ -30,7 +30,7 @@ Route::group(['prefix'=>'account'],function(){
         Route::post('books-store',[BookController::class,'store'])->name('books.store');
         Route::get('books/edit/{id}',[BookController::class,'edit'])->name('books.edit');
         Route::post('books-update/{id}',[BookController::class,'update'])->name('books.update');
-        Route::post('books-delete/',[BookController::class,'destroy'])->name('books.delete');
+        Route::delete('books-delete/',[BookController::class,'destroy'])->name('books.delete');
 
         Route::get('reviews',[ReviewController::class,'index'])->name('account.reviews');
         Route::get('reviews/{id}',[ReviewController::class,'edit'])->name('account.reviews.edit');

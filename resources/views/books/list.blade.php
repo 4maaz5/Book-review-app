@@ -85,7 +85,7 @@
         $.ajax({
            url:'{{ route("books.delete") }}',
            data:{id:id},
-           type:'Post',
+           type:'delete',
            headers:{
               'X-CSRF-TOKEN':'{{ csrf_token() }}'
            },
